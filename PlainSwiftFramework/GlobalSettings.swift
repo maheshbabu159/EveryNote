@@ -12,59 +12,30 @@ import UIColor_Hex_Swift
 class GlobalSettings {
     
     class func addUserDefaults(){
-        
-        
         GlobalVariables.globalUserDefaults.setInteger(0, forKey: GlobalVariables.user_defaults_app_iteration_number_key)
-        
         GlobalVariables.globalUserDefaults.setBool(false, forKey: GlobalVariables.user_defaults_app_purchased_flag_key)
-        
         GlobalVariables.globalUserDefaults.setInteger(-1,forKey:GlobalVariables.user_defaults_match_id_key)
-        
         GlobalVariables.globalUserDefaults.setInteger(-1,forKey:GlobalVariables.user_defaults_location_id_key)
-        
         GlobalVariables.globalUserDefaults.setInteger(-1,forKey:GlobalVariables.user_defaults_tournment_id_key)
-        
         GlobalVariables.globalUserDefaults.setBool(false,forKey:GlobalVariables.user_defaults_remember_me_key)
-        
         GlobalVariables.globalUserDefaults.setBool(true,forKey:GlobalVariables.user_defaults_calendar_access)
-
-     
         GlobalVariables.globalUserDefaults.setBool(false,forKey:GlobalVariables.user_defaults_signed_in_key)
-
         GlobalVariables.globalUserDefaults.setValue("", forKey: GlobalVariables.user_defaults_session_id_key)
-      
         GlobalVariables.globalUserDefaults.setValue("", forKey: GlobalVariables.user_defaults_username_key)
-    
         GlobalVariables.globalUserDefaults.setValue("", forKey: GlobalVariables.user_defaults_password_key)
-        
         GlobalVariables.globalUserDefaults.setValue("", forKey: GlobalVariables.user_defaults_city_id_key)
-        
         GlobalVariables.globalUserDefaults.setValue("", forKey: GlobalVariables.user_defaults_course_id_key)
-        
         GlobalVariables.globalUserDefaults.setValue("", forKey: GlobalVariables.user_defaults_user_id_key)
-        
         GlobalVariables.globalUserDefaults.setValue("", forKey: GlobalVariables.user_defaults_role_id_key)
-        
         GlobalVariables.globalUserDefaults.setValue("", forKey: GlobalVariables.user_defaults_name_key)
-        
         GlobalVariables.globalUserDefaults.setBool(GlobalVariables.isPurchased, forKey: GlobalVariables.user_defaults_isPurchased_key)
-
-
-        
         NSUserDefaults.standardUserDefaults().synchronize()
-        
-        
     }
     class func increaseAppIterationNumber(){
-        
         var iterationNumber = GlobalVariables.globalUserDefaults.integerForKey(GlobalVariables.user_defaults_app_iteration_number_key)
-        
         iterationNumber = iterationNumber+1;
-        
         GlobalVariables.globalUserDefaults.setInteger(iterationNumber, forKey: GlobalVariables.user_defaults_app_iteration_number_key)
-        
         NSUserDefaults.standardUserDefaults().synchronize()
-
     }
     
     class func isPurchased() -> Bool{
@@ -72,6 +43,24 @@ class GlobalSettings {
         let isPurchased = GlobalVariables.globalUserDefaults.boolForKey(GlobalVariables.user_defaults_isPurchased_key)
         
         return isPurchased
+    }
+    //Logic for getting time difference between two dates.
+    class func timeDifference(timeString:String) -> NSDateComponents{
+        
+        let dateFormatter = NSDateFormatter()
+        dateFormatter.dateFormat = GlobalVariables.timeFormat
+        
+        let calendar: NSCalendar = NSCalendar.currentCalendar()
+        let startDate:NSDate = NSDate()
+        let endDate:NSDate = dateFormatter.dateFromString(timeString)!
+        
+        // Replace the hour (time) of both dates with 00:00
+        let date1 = calendar.startOfDayForDate(startDate)
+        let date2 = calendar.startOfDayForDate(endDate)
+        
+        let components = calendar.components( [NSCalendarUnit.Day, NSCalendarUnit.Minute] , fromDate: date1, toDate: date2, options: [])
+        
+        return components
     }
     class func setIsPurchased(value: Bool){
         

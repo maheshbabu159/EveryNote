@@ -9,30 +9,22 @@
 import Foundation
 
 struct GlobalVariables {
-
-
     static let globalUserDefaults = NSUserDefaults.standardUserDefaults()
-
     static let globalSingleton =  GlobalSingleton.sharedInstance
-
     static let blue_color = "#4AB3EF"
     static let green_color = "#fc4f02"
     static let yellow_color = "#fc4f02"
     static let appColor = "#F04300"
-    
     static let timeInterval = 60.0
-    
     static let admobBannerId = "ca-app-pub-1963486029431498/2630997168"
     static let admobInterstialId = "ca-app-pub-1963486029431498/4107730369"
-    
     static let isPurchased : Bool = false
-
+    static let timeFormat = "yyyy-MM-dd hh:mm a"
     static let inappPurchaseProductId = "com.sptcs.rugbyscoreboard.Rugby"
     static let appName = "Rugby Scoreboard"
 
     //User defuals keys
     static let user_defaults_calendar_access = "is_calenter_accessable"
-
     static let user_defaults_app_iteration_number_key = "app_iteration_number"
     static let user_defaults_app_purchased_flag_key = "is_app_purchased"
     static let user_defaults_level_objects_array_key = "level_objects_array"
@@ -51,7 +43,6 @@ struct GlobalVariables {
     static let user_defaults_from_year_key = "fromYear"
     static let user_defaults_to_year_key = "toYear"
     static let user_defaults_session_id_key = "session_id"
-    
     static let user_defaults_city_id_key = "city"
     static let user_defaults_course_id_key = "course"
     static let user_defaults_user_id_key = "userId"
@@ -61,59 +52,38 @@ struct GlobalVariables {
      
     //Service calls values
     static let request_url = "https://api.parse.com/1/functions/function"
-    
     static let moreAppsURL = "https://itunes.apple.com/us/artist/mahendra-babu/id470889593"
     static let appReviewURL =  "https://itunes.apple.com/us/app/rugby-scoreboard/id507755804?mt=8"
-
     static let x_parse_application_id_key = "X-Parse-Application-Id"
     static let x_parse_application_id_value = "3iSUed31jR3LPJwMSBy9rKZDCwo5nYz5i56QMy7s"
-    
     static let x_parse_rest_api_key = "X-Parse-REST-API-Key"
     static let x_parse_rest_api_value = "PF90VEIV03MedSVp3SVz2Q75QO0SsUZWW2RC09WS"
-    
     static let x_parse_client_key_value = "AxXgRnQRxorVr15m8RLCkLsDwztJMO7raAr9DDLD"
-
-
-
     static let request_content_type_key = "Content-Type"
     static let request_content_type_value = "application/json"
-    
     static let request_content_length_key = "Content-Length"
-
     static let request_type_value = "POST"
     
+    //Global enums
     enum RequestAPIMethods : NSString{
-        
         case getComments = "getComments"
         case registerDevice = "registerDevice"
-        
     }
     enum CoreDataEntities : NSString{
-        
         case Movies = "MoviesModel"
         case ReviewOrComment = "CommentsModel"
         case NotesModel = "NotesModel"
-
     }
     enum BookmarkType : NSString{
-        
         case Institute = "Institute"
         case Trainer = "Trainer"
         case Course = "Course"
-        
     }
-
-    
     enum SlideMenuItem : Int{
-        
         case HOME = 0
         case INSTITUTES = 1
         case COURSES = 2
         case ACCOUNT = 3
-
     }
-     
-
-  
 }
 
