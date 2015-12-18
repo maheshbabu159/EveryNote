@@ -48,9 +48,12 @@ class CommonModel: NSObject {
         do {
             if let resultsArray = try context.executeFetchRequest(fetchRequest) as? [NSManagedObject] {
                
-                for result in resultsArray {
+                for object in resultsArray {
                     
-                    context.deleteObject(result)
+                    context.deleteObject(object)
+                    
+                    //Delete the notification for the new record
+                    NotificationsHandler.cancelNotification((object.valueForKey("objectId") as? String)!)
                 }
                 
                 try context.save()

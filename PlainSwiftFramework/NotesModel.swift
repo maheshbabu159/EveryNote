@@ -42,18 +42,19 @@ class NotesModel: NSManagedObject {
             
             newEntity.checked = checked
         }
-        if let uuid = dictionary.objectForKey("uuid") as? String{
+        if let objectId = dictionary.objectForKey("objectId") as? String{
             
-            newEntity.uuid = uuid
+            newEntity.objectId = objectId
         }
-        
-
-        
+    
         //Save the object
         do {
             
             try newEntity.managedObjectContext?.save()
             
+            //Add the notification for the new record
+            NotificationsHandler.addNotification(dictionary as AnyObject)
+
         } catch {
             
             print(error)
@@ -86,6 +87,10 @@ class NotesModel: NSManagedObject {
             for object in result{
                 
                 context.deleteObject(object as! NSManagedObject)
+                
+                //Delete the notification for the new record
+                NotificationsHandler.cancelNotification((object.valueForKey("objectId") as? String)!)
+                
             }
             
         } catch {
@@ -117,9 +122,9 @@ class NotesModel: NSManagedObject {
             
             object.checked = checked
         }
-        if let uuid = dictionary.objectForKey("uuid") as? String{
+        if let objectId = dictionary.objectForKey("objectId") as? String{
             
-            object.uuid = uuid
+            object.objectId = objectId
         }
         
         //Save the object

@@ -44,10 +44,7 @@ class NotesTableViewController: BaseViewController {
         tap.numberOfTapsRequired = 2
         self.view.addGestureRecognizer(tap)
         
-        
         self.refreshView()
-        
-       
     }
 
     override func didReceiveMemoryWarning() {
@@ -125,9 +122,7 @@ class NotesTableViewController: BaseViewController {
                 
                 
             }))
-
-          
-            
+            self.presentViewController(refreshAlert, animated: true, completion: nil)
         }
     }
     @IBAction func settingsButtonClick(sender:AnyObject){
@@ -268,7 +263,6 @@ class NotesTableViewController: BaseViewController {
         let note:NSDictionary = ["title":GlobalVariables.appName ,"note":self.noteTextFiled.text!, "checked":NSNumber(bool: false),"uuid":NSUUID().UUIDString,"createdDate":NSDate()]
         
         NotesModel.insertObject(note as AnyObject, context: self.appDelegate.managedObjectContext)
-        NotificationsHandler.addNotification(note as AnyObject)
     
     }
     
