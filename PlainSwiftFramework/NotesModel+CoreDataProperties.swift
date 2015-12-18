@@ -13,12 +13,11 @@ import Foundation
 import CoreData
 
 extension NotesModel {
-
+    @NSManaged var uuid: String?
     @NSManaged var title: String?
     @NSManaged var remainderDate: NSDate?
     @NSManaged var createdDate: NSDate?
     @NSManaged var note: String?
     @NSManaged var checked: NSNumber?
-
 
 }

@@ -60,4 +60,34 @@ class CommonModel: NSObject {
             print(error as NSError)
         }
     }
+    
+    class func deleteObject(entityName:String, key:String, value:String,context:NSManagedObjectContext) {
+        
+        //Predicate
+        let predicate = NSPredicate(format: "\(key) = '\(value)'")
+        
+        // Initialize Fetch Request
+        let fetchRequest = NSFetchRequest()
+        
+        // Create Entity Description
+        let entityDescription = NSEntityDescription.entityForName(entityName, inManagedObjectContext: context)
+        
+        // Configure Fetch Request
+        fetchRequest.entity = entityDescription
+        fetchRequest.predicate = predicate
+        
+        do {
+            
+            let result = try context.executeFetchRequest(fetchRequest)
+            
+            for object in result{
+                
+                context.deleteObject(object as! NSManagedObject)
+            }
+            
+        } catch {
+            
+            print(error as NSError)
+        }
+    }
 }

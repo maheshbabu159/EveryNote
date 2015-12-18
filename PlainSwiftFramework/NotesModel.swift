@@ -38,7 +38,16 @@ class NotesModel: NSManagedObject {
             
             newEntity.createdDate = createdDate
         }
-       
+        if let checked = dictionary.objectForKey("checked") as? NSNumber{
+            
+            newEntity.checked = checked
+        }
+        if let uuid = dictionary.objectForKey("uuid") as? String{
+            
+            newEntity.uuid = uuid
+        }
+        
+
         
         //Save the object
         do {
@@ -55,9 +64,74 @@ class NotesModel: NSManagedObject {
         
         
     }
-    class func updateObject() {
+    class func deleteSelectedObjects(context:NSManagedObjectContext) {
         
+        //Predicate
+        let predicate = NSPredicate(format: "checked = \(NSNumber(bool: true))")
         
+        // Initialize Fetch Request
+        let fetchRequest = NSFetchRequest()
+        
+        // Create Entity Description
+        let entityDescription = NSEntityDescription.entityForName(GlobalVariables.CoreDataEntities.NotesModel.rawValue as String, inManagedObjectContext: context)
+        
+        // Configure Fetch Request
+        fetchRequest.entity = entityDescription
+        fetchRequest.predicate = predicate
+        
+        do {
+            
+            let result = try context.executeFetchRequest(fetchRequest)
+            
+            for object in result{
+                
+                context.deleteObject(object as! NSManagedObject)
+            }
+            
+        } catch {
+            
+            print(error as NSError)
+        }
+
+    }
+    class func updateObject(object:NotesModel, dictionary:AnyObject, context:NSManagedObjectContext) {
+        
+        //Set propert values
+        if let title = dictionary.valueForKey("title"){
+            
+            object.title = title as? String
+        }
+        if let note = dictionary.valueForKey("note"){
+            
+            object.note = note as? String
+        }
+        if let remainderDate:NSDate  = dictionary.valueForKey("remainderDate") as? NSDate{
+            
+            object.remainderDate = remainderDate
+        }
+        if let createdDate:NSDate = dictionary.objectForKey("createdDate") as? NSDate{
+            
+            object.createdDate = createdDate
+        }
+        if let checked = dictionary.objectForKey("checked") as? NSNumber{
+            
+            object.checked = checked
+        }
+        if let uuid = dictionary.objectForKey("uuid") as? String{
+            
+            object.uuid = uuid
+        }
+        
+        //Save the object
+        do {
+            
+            try object.managedObjectContext?.save()
+            
+        } catch {
+            
+            print(error)
+        }
+
     }
     class func truncateAllObjects(context:NSManagedObjectContext) {
         

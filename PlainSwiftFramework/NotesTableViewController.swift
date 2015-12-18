@@ -21,6 +21,7 @@ class NotesTableViewController: BaseViewController {
     
     @IBOutlet var tasksTableView:UITableView!
     @IBOutlet var noteTextFiled:UITextField!
+    var datePickerView: UIDatePicker!
 
     var notesListArray:NSArray!
     var segmentSelectedIndex = 0
@@ -31,6 +32,9 @@ class NotesTableViewController: BaseViewController {
 
         // Do any additional setup after loading the view.
         self.notesListArray = NSArray()
+        //Creating pickerview object
+        self.datePickerView = UIDatePicker(frame: CGRectMake(0, 0, self.view.frame.size.width, 200))
+       
         
         //super.showMenuButton()
         super.setViewBackGround(self.view)
@@ -43,9 +47,7 @@ class NotesTableViewController: BaseViewController {
         
         self.refreshView()
         
-        //let parameters = ["method":GlobalVariables.RequestAPIMethods.getComments.rawValue,"movieId":"lQl9OfB40U"]
-        //super.showProgress()
-        //NetworkManager.postRequest(parameters, delegate: self)
+       
     }
 
     override func didReceiveMemoryWarning() {
@@ -110,7 +112,21 @@ class NotesTableViewController: BaseViewController {
             
         }else{
             
+            let refreshAlert = UIAlertController(title: GlobalVariables.appName, message:"Are you sure want to delete all notes?" as String, preferredStyle: UIAlertControllerStyle.Alert)
             
+            refreshAlert.addAction(UIAlertAction(title: "Ok", style: .Default, handler: { (action: UIAlertAction!) in
+                
+                //Remove all selected objects
+                NotesModel.deleteSelectedObjects(self.appDelegate.managedObjectContext);
+                self.refreshView()
+                
+            }))
+            refreshAlert.addAction(UIAlertAction(title: "Cancel", style: .Cancel, handler: { (action: UIAlertAction!) in
+                
+                
+            }))
+
+          
             
         }
     }
@@ -123,21 +139,68 @@ class NotesTableViewController: BaseViewController {
     @IBAction func editButtonClick(sender:AnyObject){
         
         
+        let button:UIButton = sender as! UIButton
+        let buttonPosition = button.convertPoint(CGPointZero, toView: self.tasksTableView)
+        let indexPath = self.tasksTableView.indexPathForRowAtPoint(buttonPosition)
+        let notesModel:NotesModel = self.notesListArray.objectAtIndex((indexPath?.row)!) as! NotesModel
+        
+        var editTextField: UITextField?
+        let alertController = UIAlertController(title: GlobalVariables.appName, message: "", preferredStyle: UIAlertControllerStyle.Alert)
+        
+        alertController.addTextFieldWithConfigurationHandler { textField -> Void in
+            // you can use this text field
+            editTextField = textField
+        }
+        
+        alertController.addAction(UIAlertAction(title: "Close", style: UIAlertActionStyle.Cancel, handler:{ (UIAlertAction)in
 
+            
+        }))
+        alertController.addAction(UIAlertAction(title: "Ok", style: UIAlertActionStyle.Default, handler:{ (UIAlertAction)in
+      
+            let dictinary:NSDictionary = ["title":GlobalVariables.appName ,"note":editTextField!.text!, "checked":NSNumber(bool: false),"uuid":NSUUID().UUIDString]
+            NotesModel.updateObject(notesModel, dictionary: dictinary, context: self.appDelegate.managedObjectContext)
+            self.refreshView()
+            
+        }))
+        self.presentViewController(alertController, animated: true, completion: {
+      
+            print("completion block")
+        })
     }
     @IBAction func alarmButtonClick(sender:AnyObject){
         
         
         let button:UIButton = sender as! UIButton
-        let indexPath = self.tasksTableView.indexPathForRowAtPoint(button.bounds.origin)
+        let buttonPosition = button.convertPoint(CGPointZero, toView: self.tasksTableView)
+        let indexPath = self.tasksTableView.indexPathForRowAtPoint(buttonPosition)
         
-        let object:NotesModel = self.notesListArray.objectAtIndex(indexPath!.row) as! NotesModel
-        
-        
+        let notesModel:NotesModel = self.notesListArray.objectAtIndex((indexPath?.row)!) as! NotesModel
+        self.showPickerView(notesModel)
+
     }
     @IBAction func checkboxButtonClick(sender:AnyObject){
+       
+        let button:UIButton = sender as! UIButton
+        let buttonPosition = button.convertPoint(CGPointZero, toView: self.tasksTableView)
+        let indexPath = self.tasksTableView.indexPathForRowAtPoint(buttonPosition)
         
-        
+        let cell:UITableViewCell = self.tasksTableView.cellForRowAtIndexPath(indexPath!)!
+        let checkboxButton:UIButton = cell.contentView.viewWithTag(1003) as! UIButton
+
+        let notesModel:NotesModel = self.notesListArray.objectAtIndex((indexPath?.row)!) as! NotesModel
+        let isChecked:Bool = notesModel.checked!.boolValue
+
+        if(isChecked){
+            
+            checkboxButton.setImage(UIImage(named: "checkbox_unchecked"), forState: .Normal)
+            notesModel.checked = NSNumber(bool: false)
+            
+        }else{
+            
+            checkboxButton.setImage(UIImage(named: "checkbox_checked"), forState: .Normal)
+            notesModel.checked = NSNumber(bool: true)
+        }
         
     }
     @IBAction func cancelButtonClick(sender:AnyObject){
@@ -153,6 +216,46 @@ class NotesTableViewController: BaseViewController {
         
     }
     //MARK: Eventstore methods
+    func showPickerView(notesModel:NotesModel){
+        
+        
+        //Creating view to add datepicker
+        let viewPicker: UIView = UIView(frame: CGRectMake(0, 0, self.view.frame.size.width, 200))
+        viewPicker.backgroundColor = UIColor.clearColor()
+      
+        //Initializing date picker
+        viewPicker.addSubview   (self.datePickerView)
+        
+        let alertController = UIAlertController(title: GlobalVariables.appName, message:"\n\n\n\n\n\n\n\n\n", preferredStyle: .ActionSheet)
+        alertController.view.addSubview(viewPicker)
+        
+        let cancelAction = UIAlertAction(title: "Cancel", style: .Cancel) { (action) in
+            
+            // ...
+        }
+        alertController.addAction(cancelAction)
+        
+        let OKAction = UIAlertAction(title: "OK", style: .Default) { (action) in
+            
+    
+            //Update remainer date in database
+            let dictinary:NSDictionary = ["remainderDate":self.datePickerView.date]
+           
+            NotesModel.updateObject(notesModel, dictionary: dictinary, context: self.appDelegate.managedObjectContext)
+            
+            self.refreshView()
+
+            
+        }
+        alertController.addAction(OKAction)
+        
+        self.presentViewController(alertController, animated: true) {
+            
+            // ...
+        }
+    }
+    
+
     func refreshView(){
         
         self.notesListArray = NotesModel.fetchAllObjects(self.appDelegate.managedObjectContext)
@@ -162,7 +265,7 @@ class NotesTableViewController: BaseViewController {
     func addNewNote(){
        
         //Move to database
-        let note:NSDictionary = ["title":GlobalVariables.appName ,"note":self.noteTextFiled.text!]
+        let note:NSDictionary = ["title":GlobalVariables.appName ,"note":self.noteTextFiled.text!, "checked":NSNumber(bool: false),"uuid":NSUUID().UUIDString,"createdDate":NSDate()]
         
         NotesModel.insertObject(note as AnyObject, context: self.appDelegate.managedObjectContext)
         NotificationsHandler.addNotification(note as AnyObject)

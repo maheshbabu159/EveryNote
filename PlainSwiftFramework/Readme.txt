@@ -24,3 +24,8 @@ kFoldersListTableViewController
 
 http://stackoverflow.com/questions/16832459/ios-launch-image-sizes
 https://www.google.co.in/?gfe_rd=cr&ei=16VpVu-FDrDG8Af755GwBQ#q=ios%20screenshot%20sizes
+
+
+//let parameters = ["method":GlobalVariables.RequestAPIMethods.getComments.rawValue,"movieId":"lQl9OfB40U"]
+//super.showProgress()
+//NetworkManager.postRequest(parameters, delegate: self)
